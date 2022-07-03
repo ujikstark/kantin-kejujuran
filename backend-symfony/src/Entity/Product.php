@@ -6,9 +6,10 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[
-    ORM\Table(name:"app_user"),
+    ORM\Table(name:"app_product"),
     ORM\Entity(repositoryClass:ProductRepository::class)
 ]
 class Product
@@ -20,8 +21,12 @@ class Product
         ORM\GeneratedValue()
     ]
     private $id;
-
-    #[ORM\Column(type:"string", length: 100)]
+    
+    #[
+        ORM\Column(type:"string", length: 100),
+        Assert\NotBlank,
+        Assert\Length(min:3)
+    ]
     private $name;
 
     #[ORM\Column(type:"string", length: 255, nullable: true)]
@@ -35,6 +40,13 @@ class Product
     
     #[ORM\Column(type: 'datetime'),]
     private $createdAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+
 
     public function getId(): int
     {
