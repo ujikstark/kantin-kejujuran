@@ -47,6 +47,18 @@
             "ref": "fa845143b7e0a4c70aedd1a88c549e6d977e9ae5"
         }
     },
+    "nelmio/cors-bundle": {
+        "version": "2.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.5",
+            "ref": "6bea22e6c564fba3a1391615cada1437d0bde39c"
+        },
+        "files": [
+            "config/packages/nelmio_cors.yaml"
+        ]
+    },
     "symfony/console": {
         "version": "5.4",
         "recipe": {
