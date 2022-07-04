@@ -26,6 +26,8 @@ class RegistrationController extends AbstractController
 
         $user = new User();
 
+        if (!isset($input['username'])) return $this->json('error', 400);
+
         $userId = str_split($input['username']);
 
         if (count($userId) != 5 || (int)$input['username'] == 0) return $this->json('error', 400);
