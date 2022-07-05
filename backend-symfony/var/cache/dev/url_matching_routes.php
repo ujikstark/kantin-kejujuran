@@ -8,6 +8,10 @@
 return [
     false, // $matchHost
     [ // $staticRoutes
+        '/api/canteen' => [
+            [['_route' => 'canteen_list', '_controller' => 'App\\Controller\\CanteenController::indexAction'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'canteen_edit', '_controller' => 'App\\Controller\\CanteenController::editAction'], null, ['PUT' => 0], null, false, false, null],
+        ],
         '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\LoginController::index'], null, null, null, false, false, null]],
         '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\LogoutController::index'], null, null, null, false, false, null]],
         '/api/products' => [

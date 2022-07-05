@@ -22,4 +22,9 @@ trait EntityManagerTrait
     {
         $this->_em->clear();
     }
+
+    public function edit(object $entity): void
+    {
+        $this->_em->flush();
+    } 
 }

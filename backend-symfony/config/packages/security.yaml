@@ -35,6 +35,8 @@ security:
         - { path: ^/registration, roles: PUBLIC_ACCESS }
         - { path: ^/api/products, roles: IS_AUTHENTICATED_FULLY, methods: [POST] }
         - { path: ^/api/product, roles: IS_AUTHENTICATED_FULLY, methods: [DELETE] }
+        - { path: ^/api/canteen, roles: IS_AUTHENTICATED_FULLY, methods: [PUT, GET] }
+
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 
