@@ -6,12 +6,10 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends AbstractController
 {
@@ -32,6 +30,8 @@ class ProductController extends AbstractController
     #[Route('/api/products', name: 'create_product', methods: [Request::METHOD_POST])]
     public function createAction(Request $request)
     {
+        $user = $this->getUser();
+
         $input = json_decode($request->getContent(), true);
 
         $product = new Product();
@@ -39,6 +39,7 @@ class ProductController extends AbstractController
         $product->setDescription($input['description']);
         $product->setImage($input['image']);
         $product->setPrice((int)$input['price']);
+        $product->setUser($user);
 
         $this->productRepository->save($product);
 

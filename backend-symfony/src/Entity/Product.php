@@ -6,7 +6,6 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[
     ORM\Table(name:"app_product"),
@@ -24,8 +23,6 @@ class Product
     
     #[
         ORM\Column(type:"string", length: 100),
-        Assert\NotBlank,
-        Assert\Length(min:3)
     ]
     private $name;
 
@@ -40,6 +37,12 @@ class Product
     
     #[ORM\Column(type: 'datetime'),]
     private $createdAt;
+
+    #[
+        ORM\ManyToOne(targetEntity: User::class, inversedBy: 'products'),
+        ORM\JoinColumn(nullable: false)
+    ]
+    private User $user;
 
     public function __construct()
     {
@@ -115,6 +118,18 @@ class Product
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): Product
+    {
+        $this->user = $user;
 
         return $this;
     }
