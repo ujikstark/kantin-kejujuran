@@ -33,7 +33,7 @@ security:
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/registration, roles: PUBLIC_ACCESS }
-        - { path: ^/api/products, roles: IS_AUTHENTICATED_FULLY, methods: [POST, GET] }
+        - { path: ^/api/products, roles: IS_AUTHENTICATED_FULLY, methods: [POST] }
         - { path: ^/api/product, roles: IS_AUTHENTICATED_FULLY, methods: [DELETE] }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

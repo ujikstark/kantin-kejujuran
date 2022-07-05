@@ -24,7 +24,22 @@ class ProductController extends AbstractController
     {
         $products = $this->productRepository->findAll();
         
-        return $this->json($products);
+        $data = [];
+ 
+        foreach ($products as $product) {
+           $data[] = [
+               'id' => $product->getId(),
+               'name' => $product->getName(),
+               'description' => $product->getDescription(),
+               'image' => $product->getImage(),
+               'price' => $product->getPrice(),
+               'user_id' => $product->getUser()->getUserIdentifier()
+           ];
+        }
+ 
+ 
+        return $this->json($data);
+
     }
 
     #[Route('/api/products', name: 'create_product', methods: [Request::METHOD_POST])]
