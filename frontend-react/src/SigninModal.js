@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, Modal, Button, Alert, Spinner } from "react-bootstrap";
+import { useAuthUpdate } from "./AuthContext";
+import useUserFormValidation from "./hooks/useUserFormValidation";
+import { signinSubmit } from "./requests/user";
+import UserFormInput from "./UseFormInput";
 
 
 function SigninModal () {
@@ -7,10 +11,37 @@ function SigninModal () {
     const [modal, setModal] = useState(false);
     const [inError, setInError] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { values, handleChange, clearAll } = useUserFormValidation(); 
+    const updateAuth = useAuthUpdate();
+
+    const innerRef = useRef();
+
+    useEffect(() => {
+        innerRef.current && innerRef.current.focus()
+    }, [modal]);
+    
+    const isFormFilled = values.password && values.username;
+    const inputTypes = ['username', 'password'];
 
     const handleCancel = () => {
+        setInError(false);
+        clearAll();
 
         setModal(!modal);
+    }
+
+    const handleSigninSubmit = async () => {
+        setLoading(true);
+        const { auth, user } = await signinSubmit(values);
+        setLoading(false);
+
+        if (!auth.isAuthenticated) {
+            setInError(true);
+
+            return;
+        }
+        
+        updateAuth(auth);
     }
 
 
@@ -24,25 +55,22 @@ function SigninModal () {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <Form.Label>Student ID</Form.Label>
-                            <Form.Control type="username" placeholder="Enter ID" />
-                        </Form.Group>
-
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" />
-                        </Form.Group>
-                        <div className="d-flex justify-content-around mt-4">
-                        {loading
-                            ? <Spinner animation="border" variant="primary"/>
-                            : <Button className="mr-4 ml-4" variant="primary" type="submit">Sign in</Button>
-                        }
-                    </div>     
+                        {inputTypes.map((type, index) => (
+                            <UserFormInput
+                                type={type}
+                                asterisk={false}
+                                innerRef={innerRef}
+                                values={values}
+                                errors={{}}
+                                touched={{}}
+                                handleChange={handleChange}
+                                key={index}
+                            />
+                        ))}
                     </Form>
-                    {/* {inError &&
+                    {inError &&
                         <Alert className="mt-4" variant="danger" onClose={() => setInError(false)} dismissible>
-                            <p>Incorrect username or password.</p>
+                            <p>Incorrect Student ID or password.</p>
                         </Alert>
                     }
                     <div className="d-flex justify-content-around mt-4">
@@ -51,9 +79,7 @@ function SigninModal () {
                             : <Button disabled={!isFormFilled} className="mr-4 ml-4" variant="primary" type="submit" onClick={handleSigninSubmit}>Sign in</Button>
                         }
                     </div>             
-                    <div className="d-flex justify-content-around mt-2">
-                        <ResetPasswordEmailModal/>
-                    </div> */}
+            
                 </Modal.Body>
             </Modal>
         </>

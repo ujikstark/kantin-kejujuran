@@ -1,6 +1,8 @@
 import React from 'react';
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { Link } from 'react-router-dom';
+import { useAuth, useAuthUpdate } from './AuthContext';
+import { logout } from './requests/user';
 import SigninModal from './SigninModal';
 import SignupModal from './SignUpModal';
 
@@ -8,7 +10,14 @@ import SignupModal from './SignUpModal';
 
 function NavigationBar() {
 
-    const auth = false;
+    const auth = useAuth();
+    const updateAuth = useAuthUpdate();
+
+    const handleLogout = () => {
+        logout(updateAuth);
+    }
+
+
 
     return (
         <Navbar fixed="top" bg="dark" variant="dark" expand="md" className={'sticky-top py-3'}>
@@ -22,12 +31,8 @@ function NavigationBar() {
                     {auth 
                         ? <>
                             <Nav className="ms-auto">
-                                <Nav.Link to="/me">
-                                    <Navbar.Text className="btn btn-link" as="span">
-                                        My profile
-                                    </Navbar.Text>
-                                </Nav.Link>
-                                <Navbar.Text className="btn btn-link">Logout</Navbar.Text>
+                                
+                                <Navbar.Text onClick={handleLogout} className="btn btn-link">Logout</Navbar.Text>
                             </Nav>
                         </>
                         : <>

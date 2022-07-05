@@ -46,6 +46,7 @@ export async function signupSubmit (values) {
 
 
 export async function logout (updateAuth) {
+    updateAuth(null);
     localStorage.removeItem('user');
 
     await axios.post('/logout');
