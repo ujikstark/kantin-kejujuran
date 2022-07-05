@@ -1,23 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, Modal, Button, Navbar, Alert, Spinner } from "react-bootstrap";
+import validateUserForm from "./helper/validateUserForm";
+import useUserFormValidation from "./hooks/useUserFormValidation";
 import { signupSubmit } from "./requests/user";
+import UserFormInput from "./UseFormInput";
 
 function SignupModal () {
 
     const [modal, setModal] = useState(false);
     const [inError, setInError] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [values, setValues] = useState({
-        username: '',
-        password: '',
-        confirmPassword: ''
-    });
+    const { values, errors, touched, handleChange, clearAll } = useUserFormValidation();
+
+    const innerRef = useRef();
+    const inputTypes = ['username', 'password', 'confirmPassword'];
 
     
     const handleCancel = () => {
 
         setModal(!modal);
     }
+
+    useEffect(() => {
+        innerRef.current && innerRef.current.focus()       
+    }, [modal]);
 
     const handleSignupSubmit = async () => {
         setLoading(true);
@@ -36,14 +42,6 @@ function SignupModal () {
 
     }
 
-    const handleChange = e => {
-        const { name, value } = e.target;
-        setValues({
-            ...values,
-            [name]: value
-        });
-    };
-
     return (
         <>
             <Navbar.Text onClick={()=> setModal(true)} className="btn btn-link" as="span" style={{ textDecoration: 'none' }}>Sign up</Navbar.Text>
@@ -53,19 +51,23 @@ function SignupModal () {
                 </Modal.Header>
                 <Modal.Body>
                 <Form>
-                        <Form.Group className="mb-3" controlId="formUsername">
-                            <Form.Label>Student ID<span className="text-danger"> *</span></Form.Label>
-                            <Form.Control onChange={handleChange} type="username" placeholder="Enter ID" />
-                        </Form.Group>
-
-                        <Form.Group className="mb-3" controlId="formPassword">
-                            <Form.Label>Password<span className="text-danger"> *</span></Form.Label>
-                            <Form.Control onChange={handleChange} type="password" placeholder="Password" />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="formConfirmPassword">
-                            <Form.Label>Password Confirmation<span className="text-danger"> *</span></Form.Label>
-                            <Form.Control type="confirmPassword" placeholder="Confirm your password" />
-                        </Form.Group>
+                {inputTypes.map((type, index) => (
+                            <UserFormInput
+                                type={type}
+                                asterisk={true}
+                                innerRef={innerRef}
+                                values={values}
+                                errors={errors}
+                                touched={touched}
+                                handleChange={handleChange}
+                                key={index}
+                            />
+                        ))}
+                        {inError &&
+                        <Alert className="mt-4" variant="danger" onClose={() => setInError(false)} dismissible>
+                            <p>This Student ID is already taken, try another one.</p>
+                        </Alert>
+                        }
                         <div className="d-flex justify-content-around mt-4">
                         {loading
                             ? <Spinner animation="border" variant="primary"/>
