@@ -1,29 +1,37 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, Modal, Button, Navbar, Alert, Spinner } from "react-bootstrap";
-import validateUserForm from "./helper/validateUserForm";
+import { useAuthUpdate } from "./AuthContext";
 import useUserFormValidation from "./hooks/useUserFormValidation";
-import { signupSubmit } from "./requests/user";
+import { signinSubmit, signupSubmit } from "./requests/user";
 import UserFormInput from "./UseFormInput";
 
 function SignupModal () {
 
     const [modal, setModal] = useState(false);
+    const { values, errors, touched, handleChange, clearAll } = useUserFormValidation();
     const [inError, setInError] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { values, errors, touched, handleChange, clearAll } = useUserFormValidation();
+    const updateAuth = useAuthUpdate();
 
     const innerRef = useRef();
+
     const inputTypes = ['username', 'password', 'confirmPassword'];
+    // const isFormValid = Object.keys(errors).length === 0 && Object.keys(touched).length === inputTypes.length;
 
-    
-    const handleCancel = () => {
-
-        setModal(!modal);
-    }
 
     useEffect(() => {
         innerRef.current && innerRef.current.focus()       
     }, [modal]);
+
+    const toggleModal = () => {
+        setModal(!modal);
+    }
+
+    const handleCancel = () => {
+        setLoading(false);
+        clearAll();
+        toggleModal();  
+    }
 
     const handleSignupSubmit = async () => {
         setLoading(true);
@@ -36,15 +44,15 @@ function SignupModal () {
             return;
         }
 
-        // const { auth, user } = await signinSubmit(values);
+        const { auth, user } = await signinSubmit(values);
         setLoading(false);
-        // updateAuth(auth);
+        updateAuth(auth);
 
     }
 
     return (
         <>
-            <Navbar.Text onClick={()=> setModal(true)} className="btn btn-link" as="span" style={{ textDecoration: 'none' }}>Sign up</Navbar.Text>
+            <Navbar.Text onClick={toggleModal} className="btn btn-link" as="span" style={{ textDecoration: 'none' }}>Sign up</Navbar.Text>
             <Modal size="md" show={modal} onHide={handleCancel}>
                 <Modal.Header closeButton>
                     <Modal.Title>Sign up</Modal.Title>
@@ -68,11 +76,11 @@ function SignupModal () {
                             <p>This Student ID is already taken, try another one.</p>
                         </Alert>
                         }
-                        <div className="d-flex justify-content-around mt-4">
-                        {loading
-                            ? <Spinner animation="border" variant="primary"/>
-                            : <Button className="mr-4 ml-4" variant="primary" type="submit" onClick={handleSignupSubmit}>Sign up</Button>
-                        }
+                        <div className="d-flex justify-content-around">
+                            {loading 
+                                ? <Spinner animation="border" variants="primary"></Spinner> 
+                                : <Button type="hidden" className="mr-4 ml-4" variant="primary" size="lg" onClick={handleSignupSubmit}>Sign up</Button>
+                            }    
                     </div>     
                     </Form>
                 </Modal.Body>

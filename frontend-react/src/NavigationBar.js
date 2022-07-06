@@ -27,11 +27,10 @@ function NavigationBar() {
                 </Nav.Link>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
-                    
                     {auth 
                         ? <>
                             <Nav className="ms-auto">
-                                
+                                <Navbar.Text className="bold">Your Money: Rp.1.000.000</Navbar.Text>
                                 <Navbar.Text onClick={handleLogout} className="btn btn-link">Logout</Navbar.Text>
                             </Nav>
                         </>

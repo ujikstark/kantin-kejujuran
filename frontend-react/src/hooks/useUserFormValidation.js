@@ -11,7 +11,6 @@ export default function useUserFormValidation () {
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        console.log(values);
         setErrors(validateUserForm(values));
     }, [values]);
 

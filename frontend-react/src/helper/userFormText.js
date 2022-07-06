@@ -11,6 +11,23 @@ export default {
         placeholder: 'Confirm your password',
         label: 'Password confirmation'
     },
+    name: {
+        placeholder: 'Item Name',
+        label: 'Item Name'
+    },
+    description: {
+        placeholder: 'Description Item',
+        label: 'Description Item'
+    },
+    imageUrl: {
+        placeholder: 'Image Url',
+        label: 'Image Url'
+    },
+    price: {
+        placeholder: 'Price Item',
+        label: 'Price Item'
+    },
+
     error: {
         username: {
             invalid: 'The Student ID is not valid.'

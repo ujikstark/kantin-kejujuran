@@ -178,7 +178,7 @@
       <parameter key="allow_origin" type="collection">
         <parameter>%env(CORS_ALLOW_ORIGIN)%</parameter>
       </parameter>
-      <parameter key="allow_credentials">false</parameter>
+      <parameter key="allow_credentials">true</parameter>
       <parameter key="allow_headers" type="collection">
         <parameter>content-type</parameter>
         <parameter>authorization</parameter>
