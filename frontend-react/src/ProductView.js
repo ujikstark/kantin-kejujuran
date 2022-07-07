@@ -29,7 +29,6 @@ function ProductView () {
     }, [loading]);
 
 
-
     return (
         <Container>
         <Row className="mt-5 align-items-start justify-content-start">
