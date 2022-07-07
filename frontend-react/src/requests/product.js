@@ -14,7 +14,7 @@ export async function getProducts () {
 
 }
 
-export async function addProduct(product) {
+export async function addProduct(products, product, auth, updateAuth) {
     
     
     const date = product.created_at ? format(product.date, 'yyyy-MM-dd hh:mm:ss a') : null;
@@ -26,26 +26,29 @@ export async function addProduct(product) {
         image: product.imageUrl,
         price: product.price
     };
-    console.log(payload);
     const newProducts = await axios.post('/api/products', JSON.stringify(payload))
         .then(response => response.data)
         .catch(() => null);
-    
-    return newProducts;
+    console.log(products);
+    let newP = products;
+    newP = [...newP, product];
+    return newP;
+
+
 }
 
-export async function deleteProduct(product, auth) {
+export async function deleteProduct(product, products, auth, updateAuth) {
+    const newProducts = products.filter((td) => td.id !== product.id);
 
     if (auth === null) {
-        return null;
+        return products;
     }
 
     const isDeleted = await axios.delete('/api/product/' + product.id)
         .then(() => true)
         .catch(() => false);
 
-   return isDeleted;
+    return isDeleted ? newProducts : products;
 }
-
 
 

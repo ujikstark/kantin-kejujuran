@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
-import useUserFormValidation from "./hooks/useUserFormValidation";
+import { useAuth, useAuthUpdate } from "./AuthContext";
 import { addProduct } from "./requests/product";
 import UserFormInput from "./UseFormInput";
+import PropTypes from 'prop-types';
+import useProductFormValidation from "./hooks/useProductFormValidation";
 
 
 
-function ProductForm (products, setProducts) {
+
+function ProductForm ({products, setProducts}) {
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -14,31 +17,34 @@ function ProductForm (products, setProducts) {
     const [loading, setLoading] = useState(false);
     const [inError, setInError] = useState(false);
     const innerRef = useRef();  
+
+    const auth = useAuth();
+    const updateAuth = useAuthUpdate();
     
 
+    const inputTypes = ['name', 'price', 'description', 'imageUrl'];
+    const { values, errors, touched, handleChange, clearAll } = useProductFormValidation();
+    const isFormValid = Object.keys(errors).length === 0 && Object.keys(touched).length === inputTypes.length;
 
-    const inputTypes = ['name', 'description', 'price', 'imageUrl'];
-    const { values, errors, touched, handleChange, clearAll } = useUserFormValidation();
 
     useEffect(() => {
         innerRef.current && innerRef.current.focus()       
     }, [show]);
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         setLoading(true);
-        const isCreated = await addProduct(values);
+        const newProducts= await addProduct(products, values, auth, updateAuth);
         
-        if (!isCreated) {
-            setInError(true);
+        if (newProducts === products) {
             setLoading(false);
-            
             return;
         }
 
         setLoading(false);
-        var newProducts = products;
-        console.log(newProducts);
-        // setProducts(newProducts);        
+
+        setProducts(newProducts);      
+        clearAll();  
         handleClose();
     }
 
@@ -76,7 +82,7 @@ function ProductForm (products, setProducts) {
                         <div className="d-flex justify-content-around">
                             {loading 
                                 ? <Spinner animation="border" variants="primary"></Spinner> 
-                                : <Button type="hidden" className="mr-4 ml-4" variant="primary" size="lg" onClick={handleSubmit}>Tambah</Button>
+                                : <Button type="hidden" className="mr-4 ml-4" variant="primary" size="lg" disabled={!isFormValid} onClick={handleSubmit}>Tambah</Button>
                             }    
                     </div>     
                     </Form>
@@ -87,5 +93,6 @@ function ProductForm (products, setProducts) {
     
 
 }
+
 
 export default ProductForm;

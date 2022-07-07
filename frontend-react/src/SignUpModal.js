@@ -16,7 +16,7 @@ function SignupModal () {
     const innerRef = useRef();
 
     const inputTypes = ['username', 'password', 'confirmPassword'];
-    // const isFormValid = Object.keys(errors).length === 0 && Object.keys(touched).length === inputTypes.length;
+    const isFormValid = Object.keys(errors).length === 0 && Object.keys(touched).length === inputTypes.length;
 
 
     useEffect(() => {
@@ -79,7 +79,7 @@ function SignupModal () {
                         <div className="d-flex justify-content-around">
                             {loading 
                                 ? <Spinner animation="border" variants="primary"></Spinner> 
-                                : <Button type="hidden" className="mr-4 ml-4" variant="primary" size="lg" onClick={handleSignupSubmit}>Sign up</Button>
+                                : <Button type="hidden" className="mr-4 ml-4" variant="primary" size="lg" disabled={!isFormValid} onClick={handleSignupSubmit}>Sign up</Button>
                             }    
                     </div>     
                     </Form>

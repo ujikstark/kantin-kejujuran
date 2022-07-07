@@ -11,10 +11,8 @@ function ProductView () {
 
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
     const [products, setProducts] = useState([]);
+    const [product, setProduct] = useState([]);
     const auth = useAuth();
     const updateAuth = useAuthUpdate();
 
@@ -27,6 +25,22 @@ function ProductView () {
     })();
     return () => setLoading(false);
     }, [loading]);
+
+
+    const handleClose = () => setShow(false);
+    const handleShow =  (product) => {
+        setProduct(product);
+        setShow(true);
+    }
+
+    const handleBuy = async () => {
+        const newProducts = await deleteProduct(product, products, auth, updateAuth);
+        setProducts(newProducts);
+
+        handleClose();
+    }
+
+
 
 
     return (
@@ -61,7 +75,7 @@ function ProductView () {
         {products.map((product, index) => (
             <>
             <Col>
-                <a className="btn" onClick={handleShow}>
+                <a className="btn" onClick={() => handleShow(product)}>
                     <Card className="hover-overlay">
                         <Card.Img variant="top" src="https://ceklist.id/wp-content/uploads/2022/03/2.-Merk-Big-Boss.jpeg" />
                         
@@ -75,7 +89,14 @@ function ProductView () {
                     </Card>
                 </a>
             </Col>
-            <Modal
+            
+        
+            </>
+            
+        ))}
+                        </Row>
+
+        <Modal
                 show={show}
                 onHide={handleClose}
                 backdrop="static"
@@ -90,16 +111,9 @@ function ProductView () {
                 </Modal.Body>
                 <Modal.Footer>
 
-                <Button variant="primary">Buy Now</Button>
+                <Button disabled={!auth} variant="primary" onClick={() => handleBuy(product)}>Buy Now</Button>
                 </Modal.Footer>
             </Modal>
-        
-            </>
-            
-        ))}
-                        </Row>
-
-        
         
         </Container> 
         
