@@ -55,10 +55,18 @@ class ProductController extends AbstractController
         $product->setImage($input['image']);
         $product->setPrice((int)$input['price']);
         $product->setUser($user);
-
+    
         $this->productRepository->save($product);
 
-        return $this->json('created!');
+        $data = [
+            'id' => $product->getId(),
+            'name' => $product->getName(),
+            'description' => $product->getDescription(),
+            'price' => $product->getPrice(),
+            'user_id' => $product->getUser()->getUserIdentifier(),
+        ];
+
+        return $this->json($data);
         
     }
 
@@ -76,4 +84,5 @@ class ProductController extends AbstractController
         return $this->json('deleted!');
         
     }
+
 }

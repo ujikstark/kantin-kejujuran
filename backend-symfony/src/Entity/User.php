@@ -25,6 +25,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private $password;
 
+    #[ORM\Column(type: 'integer')]
+    private $balance;
+
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Product::class, orphanRemoval: true)]
     private Collection $products;
 
@@ -135,6 +138,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->products->contains($product)) {
             $this->products->removeElement($product);
         }
+
+        return $this;
+    }
+
+    public function getBalance(): int
+    {
+        return $this->balance;
+    }
+
+    public function setBalance(int $balance): User
+    {
+        $this->balance = $balance;
 
         return $this;
     }
