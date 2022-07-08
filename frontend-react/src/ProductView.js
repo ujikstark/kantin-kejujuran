@@ -47,13 +47,13 @@ function ProductView () {
         <Container>
         <Row className="mt-5 align-items-start justify-content-start">
             {auth ? <>
-                <Col>
+                <Col className="text-start ms-2">
                 <p>Canteen Rp1.000.000</p>
             </Col>
             <Col><ProductForm products={products} setProducts={setProducts}/> </Col>
             </> : null}
 
-            <Col>
+            <Col className="text-end me-2">
                 
                 <Dropdown className="dropdown">
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
