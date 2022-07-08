@@ -26,10 +26,7 @@ export async function signinSubmit (values) {
     auth.exp = addMinutes((new Date()), 2).getTime();
     auth.isAuthenticated = true;
 
-
-
-    localStorage.setItem('user', JSON.stringify(response));
-    
+    sessionStorage.setItem('user', JSON.stringify(response));
     return { auth, response }; 
 }
 

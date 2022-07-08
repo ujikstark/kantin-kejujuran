@@ -11,7 +11,7 @@ import { Route, Routes } from 'react-router-dom';
 function App() {
 
   const ProductView = React.lazy(() => import('./ProductView'));
-
+  
 
   return (
     <div className="App">

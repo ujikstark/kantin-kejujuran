@@ -16,15 +16,15 @@ export default {
         label: 'Item Name'
     },
     description: {
-        placeholder: 'Description Item',
-        label: 'Description Item'
+        placeholder: 'Description',
+        label: 'Description'
     },
     imageUrl: {
         placeholder: 'Image Url',
         label: 'Image Url'
     },
     price: {
-        placeholder: 'Price Item',
+        placeholder: 'Rp10000',
         label: 'Price Item'
     },
 
@@ -37,7 +37,7 @@ export default {
         },
         confirmPassword: {
             different: 'The passwords do not match.'
-        }
+        },
     }
 
 };

@@ -3,14 +3,14 @@ export default function validateUserForm (values) {
     const errors = {};
 
         if (values.username) {
-            if (values.username.trim().length != 5 || !Number.isInteger(values.username)) {
-                errors.name = 'Follow the rules!';
+            if (values.username.trim().length != 5) {
+                errors.username = 'Follow the rules!';
             }
 
             if (values.username.trim().length == 5) {
                 const sum1 = parseInt(values.username[0])+parseInt(values.username[1])+parseInt(values.username[2]);
                 const sum2 = values.username[3]+values.username[4];
-                if (sum1 != parseInt(sum2)) errors.name = 'Follow the rules!';
+                if (sum1 != parseInt(sum2)) errors.username = 'Follow the rules!';
 
             }
         } 
@@ -22,9 +22,12 @@ export default function validateUserForm (values) {
         }
     
         if (values.confirmPassword) {
-            if (values.confirmPassword !== values.password && values.confirmPassword !== values.newPassword) {
+            if (values.confirmPassword !== values.password) {
                 errors.confirmPassword = 'The password do not match!';
             }
         }
+
+        return errors;
+
     
 }
