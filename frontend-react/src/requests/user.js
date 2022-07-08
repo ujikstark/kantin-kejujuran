@@ -11,7 +11,7 @@ export async function signinSubmit (values) {
     const response = await axios.post('/login', JSON.stringify(payload))
         .then(response => {
             // return empty string
-            return response.headers;
+            return response.data;
         })
         .catch(() => null);
     
