@@ -63,7 +63,8 @@ class ProductController extends AbstractController
             'name' => $product->getName(),
             'description' => $product->getDescription(),
             'price' => $product->getPrice(),
-            'user_id' => $product->getUser()->getUserIdentifier(),
+            'userId' => $product->getUser()->getUserIdentifier(),
+            'createdAt' => $product->getCreatedAt()
         ];
 
         return $this->json($data);
