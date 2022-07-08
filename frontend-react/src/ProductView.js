@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Button, Card, Col, Container, Dropdown, Modal, Row } from 'react-bootstrap';
 import { useAuth, useAuthUpdate } from './AuthContext';
 import ProductForm from './ProductForm';
+import { getCanteenBalance } from './requests/money';
 import { deleteProduct, getProducts } from './requests/product';
+import TakeMoneyModal from './TakeMoneyModal';
 
 
 
@@ -13,6 +15,7 @@ function ProductView () {
     const [show, setShow] = useState(false);
     const [products, setProducts] = useState([]);
     const [product, setProduct] = useState([]);
+    const [canteenBalance, setCanteenBalance] = useState(0);
     const auth = useAuth();
     const updateAuth = useAuthUpdate();
 
@@ -20,11 +23,13 @@ function ProductView () {
     useEffect(() => {
     (async () => {
         const currentProducts = await getProducts();
+        const currentBalance = await getCanteenBalance();
         setLoading(false);
         setProducts(currentProducts);
+        setCanteenBalance(currentBalance.balance);
     })();
     return () => setLoading(false);
-    }, [loading]);
+    }, [auth, updateAuth]);
 
 
     const handleClose = () => setShow(false);
@@ -48,9 +53,12 @@ function ProductView () {
         <Row className="mt-5 align-items-start justify-content-start">
             {auth ? <>
                 <Col className="text-start ms-2">
-                <p>Canteen Rp1.000.000</p>
+                <p>Uang Kantin <span className="text-danger">Rp{canteenBalance}</span></p>
             </Col>
-            <Col><ProductForm products={products} setProducts={setProducts}/> </Col>
+            <Col>
+                <ProductForm products={products} setProducts={setProducts}/> 
+                <TakeMoneyModal/>
+            </Col>
             </> : null}
 
             <Col className="text-end me-2">

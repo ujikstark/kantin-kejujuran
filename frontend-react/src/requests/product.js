@@ -9,29 +9,25 @@ export async function getProducts () {
         .then(response => response.data)
         .catch(() => []);
     
-
     return products;
 
 }
 
 export async function addProduct(products, product, auth, updateAuth) {
     
-    
-    const date = product.created_at ? format(product.date, 'yyyy-MM-dd hh:mm:ss a') : null;
 
     const payload = {
         name: product.name,
         description: product.description,
-        created_at: date,
         image: product.imageUrl,
         price: product.price
     };
-    const newProducts = await axios.post('/api/products', JSON.stringify(payload))
+    const newProduct = await axios.post('/api/products', JSON.stringify(payload))
         .then(response => response.data)
         .catch(() => null);
-    console.log(products);
+
     let newP = products;
-    newP = [...newP, product];
+    newP = [...newP, newProduct];
     return newP;
 
 

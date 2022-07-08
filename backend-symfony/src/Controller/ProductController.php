@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,7 +34,8 @@ class ProductController extends AbstractController
                'description' => $product->getDescription(),
                'image' => $product->getImage(),
                'price' => $product->getPrice(),
-               'user_id' => $product->getUser()->getUserIdentifier()
+               'userId' => $product->getUser()->getUserIdentifier(),
+               'createdAt' => $product->getCreatedAt()
            ];
         }
  
