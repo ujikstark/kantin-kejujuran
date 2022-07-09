@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Col, Container, Dropdown, Modal, Row } from 'react-bootstrap';
+import { Button, Card, Col, Container, Dropdown, Modal, Row, Spinner } from 'react-bootstrap';
 import { useAuth, useAuthUpdate } from './AuthContext';
 import ProductForm from './ProductForm';
+import PutMoneyModal from './PutMoneyModal';
+import { getCanteenBalance } from './requests/money';
 import { deleteProduct, getProducts } from './requests/product';
+import TakeMoneyModal from './TakeMoneyModal';
 
 
 
@@ -13,6 +16,8 @@ function ProductView () {
     const [show, setShow] = useState(false);
     const [products, setProducts] = useState([]);
     const [product, setProduct] = useState([]);
+    const [canteenBalance, setCanteenBalance] = useState(0);
+    
     const auth = useAuth();
     const updateAuth = useAuthUpdate();
 
@@ -20,11 +25,17 @@ function ProductView () {
     useEffect(() => {
     (async () => {
         const currentProducts = await getProducts();
+        if (auth) {
+            const currentBalance = await getCanteenBalance();
+            setCanteenBalance(currentBalance.balance);
+        }
+        console.log(currentProducts);
         setLoading(false);
         setProducts(currentProducts);
     })();
     return () => setLoading(false);
-    }, [loading]);
+    }, [auth, updateAuth]);
+
 
 
     const handleClose = () => setShow(false);
@@ -34,13 +45,24 @@ function ProductView () {
     }
 
     const handleBuy = async () => {
+        setLoading(true);
         const newProducts = await deleteProduct(product, products, auth, updateAuth);
         setProducts(newProducts);
-
+        setLoading(false);
         handleClose();
     }
 
 
+    function sortDate() {
+
+        const newProducts = [...products].sort((td1, td2) => Date.parse(td1.createdAt.date) - Date.parse(td2.createdAt.date));
+        setProducts(newProducts);
+    }
+
+    function sortByName() {
+        const newProducts = [...products].sort((td1, td2) => td1.name < td2.name ? -1 : 1);
+        setProducts(newProducts);
+    }
 
 
     return (
@@ -48,9 +70,13 @@ function ProductView () {
         <Row className="mt-5 align-items-start justify-content-start">
             {auth ? <>
                 <Col className="text-start ms-2">
-                <p>Canteen Rp1.000.000</p>
+                <h5>Uang Kantin <span className="text-danger">Rp{canteenBalance}</span></h5>
             </Col>
-            <Col><ProductForm products={products} setProducts={setProducts}/> </Col>
+            <Col xs={6}>
+                <ProductForm products={products} setProducts={setProducts}/> 
+                <TakeMoneyModal canteenBalance={canteenBalance} setCanteenBalance={setCanteenBalance}/>
+                <PutMoneyModal canteenBalance={canteenBalance} setCanteenBalance={setCanteenBalance}/>
+            </Col>
             </> : null}
 
             <Col className="text-end me-2">
@@ -61,8 +87,8 @@ function ProductView () {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                    <Dropdown.Item>Terbaru</Dropdown.Item>
-                    <Dropdown.Item>A-Z</Dropdown.Item>
+                    <Dropdown.Item onClick={sortDate}>Terbaru</Dropdown.Item>
+                    <Dropdown.Item onClick={sortByName}>A-Z</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </Col>
@@ -70,14 +96,15 @@ function ProductView () {
         </Row>
         
 
-        <Row xs={1} sm={2} md={4} className="g-4 mt-2">
+        <Row xs={1} sm={2} md={4} className="g-4 mt-2 mb-5">
 
         {products.map((product, index) => (
             <>
-            <Col>
+            
+            <Col key={index}>
                 <a className="btn" onClick={() => handleShow(product)}>
-                    <Card className="hover-overlay">
-                        <Card.Img variant="top" src="https://ceklist.id/wp-content/uploads/2022/03/2.-Merk-Big-Boss.jpeg" />
+                    <Card className="hover-overlay" style={{ width: '18rem' }}>
+                        <Card.Img variant="top" src={product.image} />
                         
                         <Card.Body className="text-start">
                         <small className="text-warning">Produk Terbaru</small>
@@ -111,7 +138,12 @@ function ProductView () {
                 </Modal.Body>
                 <Modal.Footer>
 
-                <Button disabled={!auth} variant="primary" onClick={() => handleBuy(product)}>Buy Now</Button>
+               
+                    {loading 
+                        ? <Spinner animation="border" variants="primary"></Spinner> 
+                        : <Button className="mr-4 ml-4" variant="primary" onClick={() => handleBuy(product)}>Ambil</Button>
+                    }
+
                 </Modal.Footer>
             </Modal>
         

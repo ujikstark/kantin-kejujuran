@@ -43,7 +43,8 @@ function ProductForm ({products, setProducts}) {
 
         setLoading(false);
 
-        setProducts(newProducts);      
+        setProducts(newProducts);
+        window.location.reload();      
         clearAll();  
         handleClose();
     }

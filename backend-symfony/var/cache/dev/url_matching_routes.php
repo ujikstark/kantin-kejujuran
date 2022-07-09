@@ -22,13 +22,17 @@ return [
     ],
     [ // $regexpList
         0 => '{^(?'
-                .'|/api/product/([^/]++)(*:28)'
-                .'|/_error/(\\d+)(?:\\.([^/]++))?(*:63)'
+                .'|/api/(?'
+                    .'|product/([^/]++)(*:31)'
+                    .'|user/([^/]++)/balance(*:59)'
+                .')'
+                .'|/_error/(\\d+)(?:\\.([^/]++))?(*:95)'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
-        28 => [[['_route' => 'delete_product', '_controller' => 'App\\Controller\\ProductController::deleteAction'], ['id'], ['DELETE' => 0], null, false, true, null]],
-        63 => [
+        31 => [[['_route' => 'delete_product', '_controller' => 'App\\Controller\\ProductController::deleteAction'], ['id'], ['DELETE' => 0], null, false, true, null]],
+        59 => [[['_route' => 'user_balance', '_controller' => 'App\\Controller\\UserBalanceController::editAction'], ['username'], ['PUT' => 0], null, false, false, null]],
+        95 => [
             [['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
