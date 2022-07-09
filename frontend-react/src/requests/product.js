@@ -27,6 +27,7 @@ export async function addProduct(products, product, auth, updateAuth) {
         .catch(() => null);
 
     let newP = products;
+    
     newP = [...newP, newProduct];
     return newP;
 

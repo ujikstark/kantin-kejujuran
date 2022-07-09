@@ -17,6 +17,7 @@ function ProductView () {
     const [products, setProducts] = useState([]);
     const [product, setProduct] = useState([]);
     const [canteenBalance, setCanteenBalance] = useState(0);
+    
     const auth = useAuth();
     const updateAuth = useAuthUpdate();
 
@@ -24,13 +25,17 @@ function ProductView () {
     useEffect(() => {
     (async () => {
         const currentProducts = await getProducts();
-        const currentBalance = await getCanteenBalance();
+        if (auth) {
+            const currentBalance = await getCanteenBalance();
+            setCanteenBalance(currentBalance.balance);
+        }
+        console.log(currentProducts);
         setLoading(false);
         setProducts(currentProducts);
-        setCanteenBalance(currentBalance.balance);
     })();
     return () => setLoading(false);
     }, [auth, updateAuth]);
+
 
 
     const handleClose = () => setShow(false);
@@ -48,6 +53,16 @@ function ProductView () {
     }
 
 
+    function sortDate() {
+
+        const newProducts = [...products].sort((td1, td2) => Date.parse(td1.createdAt.date) - Date.parse(td2.createdAt.date));
+        setProducts(newProducts);
+    }
+
+    function sortByName() {
+        const newProducts = [...products].sort((td1, td2) => td1.name < td2.name ? -1 : 1);
+        setProducts(newProducts);
+    }
 
 
     return (
@@ -72,8 +87,8 @@ function ProductView () {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                    <Dropdown.Item>Terbaru</Dropdown.Item>
-                    <Dropdown.Item>A-Z</Dropdown.Item>
+                    <Dropdown.Item onClick={sortDate}>Terbaru</Dropdown.Item>
+                    <Dropdown.Item onClick={sortByName}>A-Z</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </Col>
@@ -81,15 +96,15 @@ function ProductView () {
         </Row>
         
 
-        <Row xs={1} sm={2} md={4} className="g-4 mt-2">
+        <Row xs={1} sm={2} md={4} className="g-4 mt-2 mb-5">
 
         {products.map((product, index) => (
             <>
             
-            <Col>
+            <Col key={index}>
                 <a className="btn" onClick={() => handleShow(product)}>
-                    <Card className="hover-overlay">
-                        <Card.Img variant="top" src="https://ceklist.id/wp-content/uploads/2022/03/2.-Merk-Big-Boss.jpeg" />
+                    <Card className="hover-overlay" style={{ width: '18rem' }}>
+                        <Card.Img variant="top" src={product.image} />
                         
                         <Card.Body className="text-start">
                         <small className="text-warning">Produk Terbaru</small>
