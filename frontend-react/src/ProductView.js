@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Col, Container, Dropdown, Modal, Row } from 'react-bootstrap';
+import { Button, Card, Col, Container, Dropdown, Modal, Row, Spinner } from 'react-bootstrap';
 import { useAuth, useAuthUpdate } from './AuthContext';
 import ProductForm from './ProductForm';
+import PutMoneyModal from './PutMoneyModal';
 import { getCanteenBalance } from './requests/money';
 import { deleteProduct, getProducts } from './requests/product';
 import TakeMoneyModal from './TakeMoneyModal';
@@ -39,9 +40,10 @@ function ProductView () {
     }
 
     const handleBuy = async () => {
+        setLoading(true);
         const newProducts = await deleteProduct(product, products, auth, updateAuth);
         setProducts(newProducts);
-
+        setLoading(false);
         handleClose();
     }
 
@@ -53,11 +55,12 @@ function ProductView () {
         <Row className="mt-5 align-items-start justify-content-start">
             {auth ? <>
                 <Col className="text-start ms-2">
-                <p>Uang Kantin <span className="text-danger">Rp{canteenBalance}</span></p>
+                <h5>Uang Kantin <span className="text-danger">Rp{canteenBalance}</span></h5>
             </Col>
-            <Col>
+            <Col xs={6}>
                 <ProductForm products={products} setProducts={setProducts}/> 
-                <TakeMoneyModal/>
+                <TakeMoneyModal canteenBalance={canteenBalance} setCanteenBalance={setCanteenBalance}/>
+                <PutMoneyModal canteenBalance={canteenBalance} setCanteenBalance={setCanteenBalance}/>
             </Col>
             </> : null}
 
@@ -82,6 +85,7 @@ function ProductView () {
 
         {products.map((product, index) => (
             <>
+            
             <Col>
                 <a className="btn" onClick={() => handleShow(product)}>
                     <Card className="hover-overlay">
@@ -119,7 +123,12 @@ function ProductView () {
                 </Modal.Body>
                 <Modal.Footer>
 
-                <Button disabled={!auth} variant="primary" onClick={() => handleBuy(product)}>Buy Now</Button>
+               
+                    {loading 
+                        ? <Spinner animation="border" variants="primary"></Spinner> 
+                        : <Button className="mr-4 ml-4" variant="primary" onClick={() => handleBuy(product)}>Ambil</Button>
+                    }
+
                 </Modal.Footer>
             </Modal>
         

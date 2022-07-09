@@ -50,7 +50,7 @@ function ProductForm ({products, setProducts}) {
 
 
     return <>
-        <Button onClick={handleShow} className="me-4">Tambah Jualan</Button>
+        <Button onClick={handleShow}>Tambah Jualan</Button>
         <Modal
         show={show}
         onHide={handleClose}
